@@ -1,2 +1,2 @@
-# corewar-track
-The corewar track
+# corewar-stadium
+The corewar stadium
