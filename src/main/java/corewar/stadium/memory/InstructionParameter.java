@@ -1,5 +1,7 @@
 package corewar.stadium.memory;
 
+import corewar.shared.HexIntConverter;
+
 public class InstructionParameter {
 
 	private final InstructionMeta meta = new InstructionMeta();
@@ -87,6 +89,14 @@ public class InstructionParameter {
 				 ", regY=" + regY +
 				 ", n=" + n +
 				 ", m=" + m +
+				 '}';
+	}
+
+	public String toLogString() {
+		return "{regX=" + regX +
+				 ", regY=" + regY +
+				 ", n=" + HexIntConverter.intToHexWithPrefix(n, 4) +
+				 ", m=" + HexIntConverter.intToHexWithPrefix(m, 4) +
 				 '}';
 	}
 

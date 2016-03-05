@@ -39,4 +39,11 @@ public class Register extends Buffer {
 			set(i, (byte) (value >> (4 * i)));
 		}
 	}
+
+	@Override
+	public Register duplicate() {
+		Register register = new Register();
+		register.set(asInt());
+		return register;
+	}
 }

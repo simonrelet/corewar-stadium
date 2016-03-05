@@ -1,6 +1,7 @@
 package corewar.stadium;
 
 import corewar.shared.Constants;
+import corewar.shared.Logger;
 import corewar.shared.Utilities;
 import corewar.stadium.StadiumShipResult.FinishType;
 import corewar.stadium.memory.Track;
@@ -24,7 +25,11 @@ public class Stadium {
 	}
 
 	public StadiumResult runInternal(String shipBin) {
-		StadiumShip ship = new StadiumShip(Utilities.extractNameFromBin(shipBin), Utilities.extractCommentFromBin(shipBin), Utilities.extractCodeFromBin(shipBin), track);
+		Logger.setStadium(this);
+		StadiumShip ship = new StadiumShip(Utilities.extractNameFromBin(shipBin),
+			Utilities.extractCommentFromBin(shipBin),
+			Utilities.extractCodeFromBin(shipBin),
+			track);
 		ships.add(new StadiumShipFork(ship));
 		track.placeShip(ships.get(0).getMainShip().getStrBin().toCharArray());
 
@@ -81,7 +86,7 @@ public class Stadium {
 	}
 
 	private boolean crashOthersIfOneFinished() {
-		if (!finishedShips.isEmpty()) {
+		if (!finishedShips.isEmpty() && finishedShips.stream().anyMatch(s -> s.getFinishType() == FinishType.FINISHED)) {
 			ships.forEach(ship -> finishedShips.add(new StadiumShipResult(ship, FinishType.CRASHED, (int) cycle)));
 			ships.clear();
 			return true;

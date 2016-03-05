@@ -18,15 +18,15 @@ public final class Utilities {
 	}
 
 	public static String extractCodeFromBin(String bin) {
-		return extractFromBin(bin, 2);
+		return bin.substring(Constants.NAME_MAX_CHARACTER_COUNT + Constants.COMMENT_MAX_CHARACTER_COUNT).trim();
 	}
 
 	public static String extractNameFromBin(String bin) {
-		return extractFromBin(bin, 0);
+		return bin.substring(0, Constants.NAME_MAX_CHARACTER_COUNT).trim();
 	}
 
 	public static String extractCommentFromBin(String bin) {
-		return extractFromBin(bin, 1);
+		return bin.substring(Constants.NAME_MAX_CHARACTER_COUNT, Constants.NAME_MAX_CHARACTER_COUNT + Constants.COMMENT_MAX_CHARACTER_COUNT).trim();
 	}
 
 	public static byte charToByte(char aChar) {
@@ -53,10 +53,6 @@ public final class Utilities {
 		}
 
 		return (char) (aByte + ref);
-	}
-
-	private static String extractFromBin(String bin, int i) {
-		return bin.split(Constants.NON_TEXT_PADDING_CHAR)[i];
 	}
 
 	public static double clamp(double min, double value, double max) {

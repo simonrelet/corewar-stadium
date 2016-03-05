@@ -2,6 +2,7 @@ package corewar.stadium;
 
 import corewar.shared.Constants;
 import corewar.shared.Delay;
+import corewar.shared.Logger;
 import corewar.shared.Mode;
 import corewar.stadium.memory.Buffer;
 import corewar.stadium.memory.FetchQueue;
@@ -20,7 +21,7 @@ public class StadiumShipFork {
 	private final StadiumShip mainShip;
 	private final int forkId;
 
-	private final Register[] registers;
+	private final Register[] registers = new Register[Constants.NB_REGISTERS];
 	private final Buffer buffer;
 	private final Flag flags = new Flag();
 	private final FetchQueue fetchQueue = new FetchQueue();
@@ -47,25 +48,27 @@ public class StadiumShipFork {
 	public StadiumShipFork(StadiumShip mainShip) {
 		this.mainShip = mainShip;
 		this.forkId = mainShip.getNextForkId();
-		this.registers = new Register[Constants.NB_REGISTERS];
 		this.buffer = new Buffer();
 
 		for (int i = 0; i < registers.length; i++) {
 			registers[i] = new Register();
 		}
+
 		checkedZones.set(0, true);
 	}
 
 	private StadiumShipFork(StadiumShip mainShip, StadiumShipFork origin) {
 		this.mainShip = mainShip;
 		this.forkId = mainShip.getNextForkId();
-		this.registers = Arrays.copyOf(origin.registers, origin.registers.length);
 		this.buffer = origin.buffer.duplicate();
-
 		this.lastCheckCycle = origin.lastCheckCycle;
 		this.pc = origin.pc;
 		this.w0 = origin.w0;
 		this.currentMode = origin.currentMode;
+
+		for (int i = 0; i < registers.length; i++) {
+			registers[i] = origin.getRegisters()[i].duplicate();
+		}
 
 		flags.setZ(true);
 		flags.setS(origin.flags.getS());
@@ -178,8 +181,12 @@ public class StadiumShipFork {
 	}
 
 	private void runFetch() {
-		fetchQueue.append(getTrack().read(pc));
+		// Update on rails flag
+		boolean onRails = onRails();
+		long pcTmp = this.pc;
+		fetchQueue.append(getTrack().read(pcTmp));
 		incrementPcAndW0();
+		Logger.logInfo((onRails ? "# " : "") + (onBlueArrow() ? "-> " : "") + "R at " + pcTmp);
 
 		currentInstructionInfo = InstructionInfo.getInstructionFromFetchQueue(fetchQueue);
 		if (currentInstructionInfo != null) {
@@ -193,6 +200,7 @@ public class StadiumShipFork {
 		if (waitTime == 0) {
 			assert currentInstructionInfo != null;
 			currentInstructionParameter = currentInstructionInfo.decode(fetchQueue);
+			Logger.logInfo(currentInstructionInfo.getInstructionType().name() + " " + currentInstructionParameter.toLogString());
 			state = StadiumShip.State.EXECUTE;
 			handleDelay(true, Delay.State.EXECUTE, this::runExecute);
 		}
