@@ -11,7 +11,7 @@ public class TestFetchQueue {
 
 	@Before
 	public void setUp() {
-		fetchQueue = new FetchQueue();
+		fetchQueue = FetchQueue.createFetchQueue();
 	}
 
 	@Test

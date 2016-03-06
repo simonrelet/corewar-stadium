@@ -13,7 +13,7 @@ public class TestTrack {
 
 	@Before
 	public void setUp() throws Exception {
-		track = new Track();
+		track = Track.create();
 	}
 
 	@Test

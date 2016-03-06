@@ -17,10 +17,6 @@ public final class HexIntConverter {
 		return intToHexImpl(value, nbNibbles, true);
 	}
 
-	public static String intToLittleEndianHex(int value, int nbNibbles) {
-		return new StringBuilder(intToHexImpl(value, nbNibbles, false)).reverse().toString();
-	}
-
 	private static int hexToIntImpl(String hex) {
 		int res = 0;
 		byte[] bytes = hex.toLowerCase().getBytes();

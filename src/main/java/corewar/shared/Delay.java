@@ -88,7 +88,7 @@ public enum Delay {
 	private final InstructionType instructionType;
 	private final Integer[][] values;
 
-	private Delay(InstructionType instructionType, Integer[][] values) {
+	Delay(InstructionType instructionType, Integer[][] values) {
 		this.instructionType = instructionType;
 		this.values = values;
 	}

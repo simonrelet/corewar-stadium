@@ -7,11 +7,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Track {
+public final class Track {
 
 	private final Map<Long, Byte> track = new HashMap<>();
 	private final Collection<TrackWrite> writeRequests = new ArrayList<>();
 	private final Collection<TrackWrite> writeAtPreviousCycle = new ArrayList<>();
+
+	private Track() {
+	}
+
+	public static Track create() {
+		return new Track();
+	}
 
 	public byte read(long address) {
 		return track.getOrDefault(address, (byte) 0);
@@ -32,7 +39,7 @@ public class Track {
 	}
 
 	public void flushWrites() {
-		writeRequests.forEach(writeRequests -> track.put(writeRequests.address, writeRequests.q));
+		writeRequests.forEach(req -> track.put(req.address, req.q));
 		writeAtPreviousCycle.clear();
 		writeAtPreviousCycle.addAll(writeRequests);
 		writeRequests.clear();
@@ -61,17 +68,16 @@ public class Track {
 	public int hashCode() {
 		int result = track.hashCode();
 		result = 31 * result + writeRequests.hashCode();
-		result = 31 * result + writeAtPreviousCycle.hashCode();
-		return result;
+		return 31 * result + writeAtPreviousCycle.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return "Track{" +
-				 "track=" + track +
-				 ", writeRequests=" + writeRequests +
-				 ", writeAtPreviousCycle=" + writeAtPreviousCycle +
-				 '}';
+		return "Track{"
+				+ "track=" + track
+				+ ", writeRequests=" + writeRequests
+				+ ", writeAtPreviousCycle=" + writeAtPreviousCycle
+				+ '}';
 	}
 
 	private static final class TrackWrite {
@@ -100,16 +106,15 @@ public class Track {
 		@Override
 		public int hashCode() {
 			int result = (int) (address ^ (address >>> 32));
-			result = 31 * result + (int) q;
-			return result;
+			return 31 * result + q;
 		}
 
 		@Override
 		public String toString() {
-			return "TrackWrite{" +
-					 "address=" + address +
-					 ", q=" + q +
-					 '}';
+			return "TrackWrite{"
+					+ "address=" + address
+					+ ", q=" + q
+					+ '}';
 		}
 	}
 }

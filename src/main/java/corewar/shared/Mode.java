@@ -23,7 +23,7 @@ public enum Mode {
 	private final int value;
 	private final int idx;
 
-	private Mode(int value, int idx) {
+	Mode(int value, int idx) {
 		this.value = value;
 		this.idx = idx;
 	}
@@ -31,17 +31,6 @@ public enum Mode {
 	@Nullable
 	public static Mode fromValue(int value) {
 		return value < 0 || value >= Mode.values().length ? null : Mode.values()[value];
-	}
-
-	@Nullable
-	public static Mode fromValue(String value) {
-		Mode mode;
-		try {
-			mode = valueOf(value.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			mode = null;
-		}
-		return mode;
 	}
 
 	public static int offsetWithIdx(int offset, int idx) {

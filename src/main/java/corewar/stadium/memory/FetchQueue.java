@@ -7,27 +7,31 @@ import java.util.Arrays;
 
 /**
  * If memory:
- *   [@]: q
- *   ------
- *   [0]: a
- *   [1]: b
- *   [2]: c
- *   [3]: d
+ * [@]: q
+ * ------
+ * [0]: a
+ * [1]: b
+ * [2]: c
+ * [3]: d
  *
  * Then fetch queue:
- *   [i]: q
- *   ------
- *   [0]: a
- *   [1]: b
- *   [2]: c
- *   [3]: d
+ * [i]: q
+ * ------
+ * [0]: a
+ * [1]: b
+ * [2]: c
+ * [3]: d
  */
-public class FetchQueue extends Buffer {
+public final class FetchQueue extends Buffer {
 
 	private int currentSize;
 
-	public FetchQueue() {
+	private FetchQueue() {
 		super(Constants.FETCH_QUEUE_SIZE);
+	}
+
+	public static FetchQueue createFetchQueue() {
+		return new FetchQueue();
 	}
 
 	@Override
@@ -60,13 +64,13 @@ public class FetchQueue extends Buffer {
 
 	/**
 	 * If fetch queue:
-	 *    [i]: q
-	 *    ------
-	 *    [0]: 1
-	 *    [1]: 2
-	 *    [2]: 3
-	 *    [2]: 4
-	 *    [4]: 5
+	 * [i]: q
+	 * ------
+	 * [0]: 1
+	 * [1]: 2
+	 * [2]: 3
+	 * [2]: 4
+	 * [4]: 5
 	 *
 	 * extractUnsignedInt(1, 4) == 0x5432
 	 *
@@ -76,7 +80,7 @@ public class FetchQueue extends Buffer {
 	 */
 	public int extractUnsignedInt(int start, int count) {
 		int res = 0;
-		for (int i = start + count - 1; i >= start ; i--) {
+		for (int i = start + count - 1; i >= start; i--) {
 			res = (res << 4) | get(i);
 		}
 		return res;

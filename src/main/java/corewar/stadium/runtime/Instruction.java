@@ -1,15 +1,17 @@
 package corewar.stadium.runtime;
 
 import corewar.shared.InstructionType;
-import corewar.stadium.StadiumShipFork;
+import corewar.stadium.StadiumShip;
 import corewar.stadium.memory.FetchQueue;
-import corewar.stadium.memory.InstructionParameter;
+import corewar.stadium.memory.InstructionParameters;
+import corewar.stadium.runtime.Decoders.Decoder;
+import corewar.stadium.runtime.Executors.Executor;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public enum InstructionInfo {
+public enum Instruction {
 
 	NOP(InstructionType.NOP, Decoders::decodeNothingToDo, Executors::executeNop),
 	CRASH(InstructionType.CRASH, Decoders::decodeNothingToDo, Executors::executeCrash),
@@ -48,18 +50,18 @@ public enum InstructionInfo {
 	CMPI(InstructionType.CMPI, Decoders::decodeFRegN, Executors::executeCmpi),
 	ADDI(InstructionType.ADDI, Decoders::decodeFRegN, Executors::executeAddi);
 
-	private static final Map<Integer, Map<Byte, InstructionInfo>> map = new HashMap<>();
+	private static final Map<Integer, Map<Byte, Instruction>> map = new HashMap<>();
 
 	static {
-		map.put(1, new HashMap<Byte, InstructionInfo>() {{
+		map.put(1, new HashMap<Byte, Instruction>() {{
 			put((byte) 0x00, CRASH);
 			put((byte) 0x01, NOP);
 		}});
-		map.put(2, new HashMap<Byte, InstructionInfo>() {{
+		map.put(2, new HashMap<Byte, Instruction>() {{
 			put((byte) 0xfc, CHECK);
 			put((byte) 0xfe, FORK);
 		}});
-		map.put(3, new HashMap<Byte, InstructionInfo>() {{
+		map.put(3, new HashMap<Byte, Instruction>() {{
 			put((byte) 0xf7, B);
 			put((byte) 0xf8, BZ);
 			put((byte) 0xf9, BNZ);
@@ -80,16 +82,16 @@ public enum InstructionInfo {
 			put((byte) 0x0d, LDR);
 			put((byte) 0x0e, STR);
 		}});
-		map.put(4, new HashMap<Byte, InstructionInfo>() {{
+		map.put(4, new HashMap<Byte, Instruction>() {{
 			put((byte) 0xf4, SWP);
 			put((byte) 0xf5, ADDI);
 			put((byte) 0xf6, CMPI);
 			put((byte) 0xfb, STAT);
 		}});
-		map.put(5, new HashMap<Byte, InstructionInfo>() {{
+		map.put(5, new HashMap<Byte, Instruction>() {{
 			put((byte) 0xf2, LC);
 		}});
-		map.put(7, new HashMap<Byte, InstructionInfo>() {{
+		map.put(7, new HashMap<Byte, Instruction>() {{
 			put((byte) 0xf3, LL);
 			put((byte) 0xf0, LDB);
 			put((byte) 0xf1, STB);
@@ -97,39 +99,38 @@ public enum InstructionInfo {
 	}
 
 	private final InstructionType instructionType;
-	private final Decoders.Decoder decoder;
-	private final Executors.Executor executor;
+	private final Decoder decoder;
+	private final Executor executor;
 
-	InstructionInfo(InstructionType instructionType, Decoders.Decoder decoder, Executors.Executor executor) {
+	Instruction(InstructionType instructionType, Decoder decoder, Executor executor) {
 		this.instructionType = instructionType;
 		this.decoder = decoder;
 		this.executor = executor;
 	}
 
-	@Nullable
-	public static InstructionInfo getInstructionFromFetchQueue(FetchQueue fetchQueue) {
-		Map<Byte, InstructionInfo> subMap = map.get(fetchQueue.size());
+	public static Optional<Instruction> getInstructionFromFetchQueue(FetchQueue fetchQueue) {
+		Map<Byte, Instruction> subMap = map.get(fetchQueue.size());
 		if (subMap == null) {
-			return null;
+			return Optional.empty();
 		}
 
-		InstructionInfo instructionInfo = subMap.get(fetchQueue.get(0));
-		if (instructionInfo == null && fetchQueue.size() > 1) {
+		Instruction instruction = subMap.get(fetchQueue.get(0));
+		if (instruction == null && fetchQueue.size() > 1) {
 			byte tmp = (byte) ((fetchQueue.get(0) << 4) | fetchQueue.get(1));
-			instructionInfo = subMap.get(tmp);
+			instruction = subMap.get(tmp);
 		}
-		return instructionInfo;
+		return Optional.ofNullable(instruction);
 	}
 
 	public InstructionType getInstructionType() {
 		return instructionType;
 	}
 
-	public InstructionParameter decode(FetchQueue fetchQueue) {
+	public InstructionParameters decode(FetchQueue fetchQueue) {
 		return decoder.apply(fetchQueue);
 	}
 
-	public void execute(StadiumShipFork ship, InstructionParameter parameter, long currentCycle) {
+	public void execute(StadiumShip ship, InstructionParameters parameter, long currentCycle) {
 		executor.accept(ship, parameter, currentCycle);
 	}
 }

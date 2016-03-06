@@ -1,13 +1,13 @@
 package corewar.stadium.memory;
 
 public class InstructionParameterBuilder {
-	private final InstructionParameter instr;
+	private final InstructionParameters instr;
 
 	public InstructionParameterBuilder() {
-		this.instr = new InstructionParameter();
+		this.instr = InstructionParameters.create();
 	}
 
-	public InstructionParameter get() {
+	public InstructionParameters get() {
 		return instr;
 	}
 

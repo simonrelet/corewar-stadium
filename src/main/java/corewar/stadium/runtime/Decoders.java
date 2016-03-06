@@ -1,62 +1,62 @@
 package corewar.stadium.runtime;
 
 import corewar.stadium.memory.FetchQueue;
-import corewar.stadium.memory.InstructionParameter;
+import corewar.stadium.memory.InstructionParameters;
 
 import java.util.function.Function;
 
 public final class Decoders {
 
 	@FunctionalInterface
-	public interface Decoder extends Function<FetchQueue, InstructionParameter> {
+	public interface Decoder extends Function<FetchQueue, InstructionParameters> {
 
 	}
 
 	private Decoders() {
 	}
 
-	public static InstructionParameter decodeNothingToDo(FetchQueue fetchQueue) {
-		return new InstructionParameter();
+	public static InstructionParameters decodeNothingToDo(FetchQueue fetchQueue) {
+		return InstructionParameters.create();
 	}
 
-	public static InstructionParameter decodeRegReg(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeRegReg(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(1));
 		res.setRegY(fetchQueue.get(2));
 		return res;
 	}
 
-	public static InstructionParameter decodeLdrStr(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeLdrStr(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(1));
 		res.setRegY(fetchQueue.get(2));
 		res.getMeta().setCount(3);
 		return res;
 	}
 
-	public static InstructionParameter decodeRegN(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeRegN(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(1));
 		res.setN(fetchQueue.extractUnsignedInt(2, 1));
 		return res;
 	}
 
-	public static InstructionParameter decodeFRegN(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeFRegN(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setN(fetchQueue.extractInt(3, 1));
 		return res;
 	}
 
-	public static InstructionParameter decodeStat(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeStat(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setN(fetchQueue.extractUnsignedInt(3, 1));
 		return res;
 	}
 
-	public static InstructionParameter decodeLdbStb(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeLdbStb(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setN(fetchQueue.extractUnsignedInt(3, 2));
 		res.setM(fetchQueue.extractUnsignedInt(5, 2));
@@ -64,35 +64,35 @@ public final class Decoders {
 		return res;
 	}
 
-	public static InstructionParameter decodeLc(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeLc(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setN(fetchQueue.extractInt(3, 2));
 		return res;
 	}
 
-	public static InstructionParameter decodeLl(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeLl(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setN(fetchQueue.extractInt(3, 4));
 		return res;
 	}
 
-	public static InstructionParameter decodeSwp(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeSwp(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		res.setRegY(fetchQueue.get(3));
 		return res;
 	}
 
-	public static InstructionParameter decodeFReg(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeFReg(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setRegX(fetchQueue.get(2));
 		return res;
 	}
 
-	public static InstructionParameter decodeMode(FetchQueue fetchQueue) {
-		InstructionParameter res = new InstructionParameter();
+	public static InstructionParameters decodeMode(FetchQueue fetchQueue) {
+		InstructionParameters res = InstructionParameters.create();
 		res.setM(fetchQueue.extractUnsignedInt(2, 1));
 		return res;
 	}

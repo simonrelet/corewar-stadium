@@ -1,13 +1,16 @@
 package corewar;
 
 import corewar.shared.Logger;
-import corewar.stadium.Stadium;
+import corewar.stadium.Stadiums;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class StadiumMain {
+public final class StadiumMain {
+
+	private StadiumMain() {
+	}
 
 	public static void main(String[] args) {
 		if (args.length < 1) {
@@ -16,7 +19,7 @@ public class StadiumMain {
 			String file = args[0];
 			try {
 				String content = new String(Files.readAllBytes(Paths.get(file)));
-				Logger.logResult(Stadium.run(content));
+				Logger.logResult(Stadiums.run(content));
 			} catch (IOException e) {
 				Logger.logError("Cannot read file + '" + file + "'");
 			}

@@ -11,7 +11,7 @@ public class TestRegister {
 
 	@Before
 	public void setUp() {
-		register = new Register();
+		register = Register.createRegister();
 	}
 
 	@Test

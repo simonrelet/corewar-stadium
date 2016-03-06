@@ -1,8 +1,16 @@
 package corewar.stadium.memory;
 
-public class Flag {
+public final class Flag {
+
 	private boolean z;
 	private boolean s;
+
+	private Flag() {
+	}
+
+	public static Flag create() {
+		return new Flag();
+	}
 
 	public boolean getZ() {
 		return z;

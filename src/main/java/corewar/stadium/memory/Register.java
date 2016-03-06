@@ -2,24 +2,30 @@ package corewar.stadium.memory;
 
 import corewar.shared.Constants;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Register: (value: 0x4321)
- *   [i]: w: q
- *   ---------
- *   [0]: 0: 1
- *   [1]: 1: 2
- *   [2]: 2: 3
- *   [3]: 3: 4
+ * [i]: w: q
+ * ---------
+ * [0]: 0: 1
+ * [1]: 1: 2
+ * [2]: 2: 3
+ * [3]: 3: 4
  */
-public class Register extends Buffer {
+public final class Register extends Buffer {
 
-	public Register() {
+	private Register() {
 		super(Constants.REGISTER_SIZE);
 	}
 
 	public static int signInt(int value) {
 		int shift = 32 - 4 * Constants.REGISTER_SIZE;
 		return (value << shift) >> shift;
+	}
+
+	public static Register createRegister() {
+		return new Register();
 	}
 
 	public int asInt() {
@@ -41,9 +47,8 @@ public class Register extends Buffer {
 	}
 
 	@Override
-	public Register duplicate() {
-		Register register = new Register();
-		register.set(asInt());
-		return register;
+	public void copyTo(Buffer dst) {
+		checkArgument(dst instanceof Register, "Can only copy to another Register");
+		System.arraycopy(buffer, 0, dst.buffer, 0, buffer.length);
 	}
 }

@@ -5,8 +5,6 @@ public final class Constants {
 	// Others
 	public static final String HEX_PREFIX = "0x";
 
-	// Pit
-	public static final String NON_TEXT_PADDING_CHAR = " ";
 	public static final int NAME_MAX_CHARACTER_COUNT = 32;
 	public static final int COMMENT_MAX_CHARACTER_COUNT = 128;
 

@@ -1,14 +1,19 @@
 package corewar.stadium.memory;
 
-import corewar.shared.HexIntConverter;
+public final class InstructionParameters {
 
-public class InstructionParameter {
-
-	private final InstructionMeta meta = new InstructionMeta();
+	private final InstructionParametersMeta meta = InstructionParametersMeta.create();
 	private int regX = -1;
 	private int regY = -1;
 	private int n;
 	private int m;
+
+	private InstructionParameters() {
+	}
+
+	public static InstructionParameters create() {
+		return new InstructionParameters();
+	}
 
 	public int getRegX() {
 		return regX;
@@ -42,7 +47,7 @@ public class InstructionParameter {
 		this.m = m;
 	}
 
-	public InstructionMeta getMeta() {
+	public InstructionParametersMeta getMeta() {
 		return meta;
 	}
 
@@ -51,11 +56,11 @@ public class InstructionParameter {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof InstructionParameter)) {
+		if (!(o instanceof InstructionParameters)) {
 			return false;
 		}
 
-		InstructionParameter that = (InstructionParameter) o;
+		InstructionParameters that = (InstructionParameters) o;
 		if (m != that.m) {
 			return false;
 		}
@@ -65,10 +70,7 @@ public class InstructionParameter {
 		if (regX != that.regX) {
 			return false;
 		}
-		if (regY != that.regY) {
-			return false;
-		}
-		return meta.equals(that.meta);
+		return regY == that.regY && meta.equals(that.meta);
 	}
 
 	@Override
@@ -83,28 +85,26 @@ public class InstructionParameter {
 
 	@Override
 	public String toString() {
-		return "InstructionParameter{" +
-				 "meta=" + meta +
-				 ", regX=" + regX +
-				 ", regY=" + regY +
-				 ", n=" + n +
-				 ", m=" + m +
-				 '}';
+		return "InstructionParameter{"
+				+ "meta=" + meta
+				+ ", regX=" + regX
+				+ ", regY=" + regY
+				+ ", n=" + n
+				+ ", m=" + m
+				+ '}';
 	}
 
-	public String toLogString() {
-		return "{regX=" + regX +
-				 ", regY=" + regY +
-				 ", n=" + HexIntConverter.intToHexWithPrefix(n, 4) +
-				 ", m=" + HexIntConverter.intToHexWithPrefix(m, 4) +
-				 '}';
-	}
-
-	public static class InstructionMeta {
+	public static final class InstructionParametersMeta {
 
 		private int count;
 		private int offset;
-		private int tmpResult;
+
+		private InstructionParametersMeta() {
+		}
+
+		public static InstructionParametersMeta create() {
+			return new InstructionParametersMeta();
+		}
 
 		public int getCount() {
 			return count;
@@ -122,48 +122,30 @@ public class InstructionParameter {
 			this.offset = offset;
 		}
 
-		public int getTmpResult() {
-			return tmpResult;
-		}
-
-		public void setTmpResult(int tmpResult) {
-			this.tmpResult = tmpResult;
-		}
-
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
-			if (!(o instanceof InstructionMeta)) {
+			if (!(o instanceof InstructionParametersMeta)) {
 				return false;
 			}
 
-			InstructionMeta that = (InstructionMeta) o;
-			if (count != that.count) {
-				return false;
-			}
-			if (offset != that.offset) {
-				return false;
-			}
-			return tmpResult == that.tmpResult;
+			InstructionParametersMeta that = (InstructionParametersMeta) o;
+			return count == that.count && offset == that.offset;
 		}
 
 		@Override
 		public int hashCode() {
-			int result = count;
-			result = 31 * result + offset;
-			result = 31 * result + tmpResult;
-			return result;
+			return 31 * count + offset;
 		}
 
 		@Override
 		public String toString() {
-			return "InstructionMeta{" +
-					 "count=" + count +
-					 ", offset=" + offset +
-					 ", tmpResult=" + tmpResult +
-					 '}';
+			return "InstructionMeta{"
+					+ "count=" + count
+					+ ", offset=" + offset
+					+ '}';
 		}
 	}
 }

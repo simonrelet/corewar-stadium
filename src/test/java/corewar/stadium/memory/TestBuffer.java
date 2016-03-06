@@ -1,8 +1,8 @@
 package corewar.stadium.memory;
 
+import corewar.shared.Constants;
 import org.junit.Before;
 import org.junit.Test;
-import corewar.shared.Constants;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,7 +12,7 @@ public class TestBuffer {
 
 	@Before
 	public void setUp() {
-		buffer = new Buffer();
+		buffer = Buffer.createBuffer();
 	}
 
 	@Test

@@ -5,18 +5,24 @@ import corewar.shared.Utilities;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class Buffer {
 
 	private static final int NIBBLE_MASK = 0x0f;
 
 	protected final byte[] buffer;
 
-	public Buffer() {
+	private Buffer() {
 		this(Constants.BUFFER_SIZE);
 	}
 
 	protected Buffer(int size) {
 		this.buffer = new byte[size];
+	}
+
+	public static Buffer createBuffer() {
+		return new Buffer();
 	}
 
 	public byte get(int index) {
@@ -39,10 +45,10 @@ public class Buffer {
 		return Arrays.copyOf(buffer, buffer.length);
 	}
 
-	public Buffer duplicate() {
-		Buffer other = new Buffer(buffer.length);
-		System.arraycopy(buffer, 0, other.buffer, 0, buffer.length);
-		return other;
+	public void copyTo(Buffer dst) {
+		checkArgument(dst.buffer.length == buffer.length,
+				"The other buffer must have the same length");
+		System.arraycopy(buffer, 0, dst.buffer, 0, buffer.length);
 	}
 
 	@Override
