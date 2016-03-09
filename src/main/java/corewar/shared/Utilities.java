@@ -6,7 +6,8 @@ public final class Utilities {
 	}
 
 	public static String extractCodeFromBin(String bin) {
-		return bin.substring(Constants.NAME_MAX_CHARACTER_COUNT + Constants.COMMENT_MAX_CHARACTER_COUNT).trim();
+		int index = Constants.NAME_MAX_CHARACTER_COUNT + Constants.COMMENT_MAX_CHARACTER_COUNT;
+		return index >= bin.length() ? "" : bin.substring(index).trim();
 	}
 
 	public static byte charToByte(char aChar) {

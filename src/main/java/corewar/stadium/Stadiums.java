@@ -5,7 +5,7 @@ public final class Stadiums {
 	private Stadiums() {
 	}
 
-	public static StadiumResult run(String inputShipBin) {
-		return new StadiumImpl().run(inputShipBin);
+	public static void run(String inputShipBin, boolean verbose) {
+		new StadiumImpl().run(inputShipBin, verbose);
 	}
 }

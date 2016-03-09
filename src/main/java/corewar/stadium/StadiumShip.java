@@ -10,6 +10,8 @@ import corewar.stadium.memory.InstructionParameters;
 import corewar.stadium.memory.InstructionParameters.InstructionParametersMeta;
 import corewar.stadium.memory.Register;
 import corewar.stadium.runtime.Instruction;
+import corewar.stadium.runtime.logs.DecodeLog;
+import corewar.stadium.runtime.logs.ReadWriteLog;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -32,6 +34,7 @@ public final class StadiumShip {
 	private final FetchQueue fetchQueue = FetchQueue.createFetchQueue();
 	private final BitSet checkedZones = new BitSet(Constants.CHECKPOINTS_PER_LAP
 			* Constants.LAP_NUMBER);
+	private final int id;
 
 	private boolean finished;
 	private boolean crashed;
@@ -48,6 +51,7 @@ public final class StadiumShip {
 
 	private StadiumShip(Stadium stadium) {
 		this.stadium = stadium;
+		this.id = stadium.getNextId();
 		for (int i = 0; i < registers.length; i++) {
 			registers[i] = Register.createRegister();
 		}
@@ -81,6 +85,10 @@ public final class StadiumShip {
 
 	public Stadium getStadium() {
 		return stadium;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public Optional<StadiumShip> getFork() {
@@ -170,8 +178,11 @@ public final class StadiumShip {
 	}
 
 	private void runFetch() {
-		// Update on rails flag
-		onRails();
+		computeOnRails();
+
+		stadium.getLogger().log(ReadWriteLog.createRead(id, stadium.getCycle(), pc, onBlueArrow(),
+				onRails()));
+
 		fetchQueue.append(stadium.getTrack().read(pc));
 		incrementPcAndW0();
 
@@ -186,7 +197,12 @@ public final class StadiumShip {
 		waitTime--;
 		if (waitTime == 0) {
 			checkArgument(instruction.isPresent(), "There should be an instruction");
-			instructionParameters = Optional.of(instruction.get().decode(fetchQueue));
+			Instruction i = instruction.get();
+			InstructionParameters p = i.decode(fetchQueue);
+			stadium.getLogger().log(DecodeLog.create(id, stadium.getCycle(), onBlueArrow(),
+					onRails(), i.print(p)));
+
+			instructionParameters = Optional.of(p);
 			state = State.EXECUTE;
 			handleDelay(true, Delay.State.EXECUTE, this::runExecute);
 		}
@@ -246,16 +262,18 @@ public final class StadiumShip {
 		pc = pc < 0 ? Constants.TRACK_SIZE + pc : pc % Constants.TRACK_SIZE;
 	}
 
-	private boolean onRails() {
-		boolean res = rails
-				|| (fetchQueue.size() == 0 && stadium.getTrack().wroteAtPreviousCycle(pc));
-		if (res) {
+	private void computeOnRails() {
+		if (rails
+				|| (fetchQueue.size() == 0 && stadium.getTrack().wroteAtPreviousCycle(pc))) {
 			rails = true;
 		}
-		return res;
 	}
 
-	private boolean onBlueArrow() {
+	public boolean onRails() {
+		return rails;
+	}
+
+	public boolean onBlueArrow() {
 		return (pc - fetchQueue.size()) % Constants.BLUE_ARROW_SPACING == 0;
 	}
 

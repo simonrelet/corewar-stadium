@@ -2,13 +2,13 @@ package corewar.stadium.runtime;
 
 import corewar.shared.Constants;
 import corewar.shared.InstructionType;
+import corewar.shared.Logger;
 import corewar.shared.Mode;
 import corewar.stadium.Stadium;
-import corewar.stadium.StadiumResult;
 import corewar.stadium.StadiumShip;
 import corewar.stadium.StadiumShipBuilder;
-import corewar.stadium.memory.InstructionParameters;
 import corewar.stadium.memory.InstructionParameterBuilder;
+import corewar.stadium.memory.InstructionParameters;
 import corewar.stadium.memory.Track;
 import org.junit.Assert;
 import org.junit.experimental.theories.DataPoint;
@@ -995,6 +995,7 @@ public class TestExecutor {
 
 	private static Stadium stadium() {
 		Track track = Track.create();
+		Logger logger = Logger.create();
 		return new Stadium() {
 
 			@Override
@@ -1008,8 +1009,18 @@ public class TestExecutor {
 			}
 
 			@Override
-			public StadiumResult run(String shipBin) {
+			public void run(String shipBin, boolean verbose) {
 				throw new IllegalArgumentException("Should not be called");
+			}
+
+			@Override
+			public Logger getLogger() {
+				return logger;
+			}
+
+			@Override
+			public int getNextId() {
+				return 0;
 			}
 		};
 	}
