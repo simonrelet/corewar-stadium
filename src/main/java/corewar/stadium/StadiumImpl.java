@@ -1,9 +1,11 @@
 package corewar.stadium;
 
 import corewar.shared.Constants;
+import corewar.shared.Logger;
 import corewar.shared.Utilities;
 import corewar.stadium.StadiumResult.FinishType;
 import corewar.stadium.memory.Track;
+import corewar.stadium.runtime.logs.ExecuteLog;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,16 +13,19 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-class StadiumImpl implements Stadium {
+final class StadiumImpl implements Stadium {
 
 	private final Track track = Track.create();
 	private final Collection<StadiumShip> ships = new ArrayList<>();
-	private Optional<StadiumResult> lastFinishedShip = Optional.empty();
+	private final Logger logger = Logger.create();
 
+	private Optional<StadiumResult> lastFinishedShip = Optional.empty();
 	private long cycle;
+	private int shipIdGenerator;
 
 	@Override
-	public StadiumResult run(String shipBin) {
+	public void run(String shipBin, boolean verbose) {
+		logger.setVerbose(verbose);
 		ships.add(StadiumShip.create(this));
 		track.placeShip(Utilities.extractCodeFromBin(shipBin).toCharArray());
 
@@ -36,7 +41,7 @@ class StadiumImpl implements Stadium {
 		}
 
 		checkArgument(lastFinishedShip.isPresent(), "There should be at least one finished ship");
-		return lastFinishedShip.get();
+		logger.logResult(lastFinishedShip.get());
 	}
 
 	@Override
@@ -49,6 +54,16 @@ class StadiumImpl implements Stadium {
 		return track;
 	}
 
+	@Override
+	public Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	public int getNextId() {
+		return shipIdGenerator++;
+	}
+
 	private void controlCheckPoints() {
 		ships.removeIf(this::removeShipIfNotChecked);
 	}
@@ -56,8 +71,9 @@ class StadiumImpl implements Stadium {
 	private boolean removeShipIfNotChecked(StadiumShip ship) {
 		boolean res = false;
 		if (ship.getLastCheckCycle() + Constants.CHECKPOINT_DELAY < cycle) {
-			lastFinishedShip = Optional.of(StadiumResult.create(FinishType.MISSED_CHECK,
-					cycle));
+			lastFinishedShip = Optional.of(StadiumResult.create(FinishType.MISSED_CHECK, cycle));
+			logger.log(ExecuteLog.create(ship.getId(), cycle, false, false,
+					"did not check: crashed"));
 			res = true;
 		}
 		return res;

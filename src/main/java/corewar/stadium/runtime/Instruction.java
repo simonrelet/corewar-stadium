@@ -11,44 +11,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static corewar.stadium.runtime.Printers.*;
+
 public enum Instruction {
 
-	NOP(InstructionType.NOP, Decoders::decodeNothingToDo, Executors::executeNop),
-	CRASH(InstructionType.CRASH, Decoders::decodeNothingToDo, Executors::executeCrash),
-	CHECK(InstructionType.CHECK, Decoders::decodeNothingToDo, Executors::executeCheck),
-	FORK(InstructionType.FORK, Decoders::decodeNothingToDo, Executors::executeFork),
+	NOP(InstructionType.NOP, Decoders::decodeNothingToDo, Executors::executeNop, Printers::nop),
+	CRASH(InstructionType.CRASH, Decoders::decodeNothingToDo, Executors::executeCrash,
+			Printers::crash),
+	CHECK(InstructionType.CHECK, Decoders::decodeNothingToDo, Executors::executeCheck,
+			Printers::check),
+	FORK(InstructionType.FORK, Decoders::decodeNothingToDo, Executors::executeFork,
+			Printers::fork),
 
-	MODE(InstructionType.MODE, Decoders::decodeMode, Executors::executeMode),
-	LC(InstructionType.LC, Decoders::decodeLc, Executors::executeLoad),
-	LL(InstructionType.LL, Decoders::decodeLl, Executors::executeLoad),
-	SWP(InstructionType.SWP, Decoders::decodeSwp, Executors::executeSwp),
-	LDB(InstructionType.LDB, Decoders::decodeLdbStb, Executors::executeLdb),
-	STB(InstructionType.STB, Decoders::decodeLdbStb, Executors::executeStb),
-	LDR(InstructionType.LDR, Decoders::decodeLdrStr, Executors::executeLdr),
-	STR(InstructionType.STR, Decoders::decodeLdrStr, Executors::executeStr),
-	STAT(InstructionType.STAT, Decoders::decodeStat, Executors::executeStat),
+	MODE(InstructionType.MODE, Decoders::decodeMode, Executors::executeMode, Printers::mode),
+	LC(InstructionType.LC, Decoders::decodeLc, Executors::executeLoad, Printers::lc),
+	LL(InstructionType.LL, Decoders::decodeLl, Executors::executeLoad, Printers::ll),
+	SWP(InstructionType.SWP, Decoders::decodeSwp, Executors::executeSwp, Printers::swp),
+	LDB(InstructionType.LDB, Decoders::decodeLdbStb, Executors::executeLdb, Printers::ldb),
+	STB(InstructionType.STB, Decoders::decodeLdbStb, Executors::executeStb, Printers::stb),
+	LDR(InstructionType.LDR, Decoders::decodeLdrStr, Executors::executeLdr, Printers::ldr),
+	STR(InstructionType.STR, Decoders::decodeLdrStr, Executors::executeStr, Printers::str),
+	STAT(InstructionType.STAT, Decoders::decodeStat, Executors::executeStat, Printers::stat),
 
-	MOV(InstructionType.MOV, Decoders::decodeRegReg, Executors::executeMov),
-	ADD(InstructionType.ADD, Decoders::decodeRegReg, Executors::executeAdd),
-	OR(InstructionType.OR, Decoders::decodeRegReg, Executors::executeOr),
-	AND(InstructionType.AND, Decoders::decodeRegReg, Executors::executeAnd),
-	XOR(InstructionType.XOR, Decoders::decodeRegReg, Executors::executeXor),
-	SUB(InstructionType.SUB, Decoders::decodeRegReg, Executors::executeSub),
-	NEG(InstructionType.NEG, Decoders::decodeRegReg, Executors::executeNeg),
-	NOT(InstructionType.NOT, Decoders::decodeRegReg, Executors::executeNot),
-	CMP(InstructionType.CMP, Decoders::decodeRegReg, Executors::executeCmp),
+	MOV(InstructionType.MOV, Decoders::decodeRegReg, Executors::executeMov, Printers::mov),
+	ADD(InstructionType.ADD, Decoders::decodeRegReg, Executors::executeAdd, Printers::add),
+	OR(InstructionType.OR, Decoders::decodeRegReg, Executors::executeOr, Printers::or),
+	AND(InstructionType.AND, Decoders::decodeRegReg, Executors::executeAnd, Printers::and),
+	XOR(InstructionType.XOR, Decoders::decodeRegReg, Executors::executeXor, Printers::xor),
+	SUB(InstructionType.SUB, Decoders::decodeRegReg, Executors::executeSub, Printers::sub),
+	NEG(InstructionType.NEG, Decoders::decodeRegReg, Executors::executeNeg, Printers::neg),
+	NOT(InstructionType.NOT, Decoders::decodeRegReg, Executors::executeNot, Printers::not),
+	CMP(InstructionType.CMP, Decoders::decodeRegReg, Executors::executeCmp, Printers::cmp),
 
-	ASR(InstructionType.ASR, Decoders::decodeRegN, Executors::executeAsr),
-	ROL(InstructionType.ROL, Decoders::decodeRegN, Executors::executeRol),
+	ASR(InstructionType.ASR, Decoders::decodeRegN, Executors::executeAsr, Printers::asr),
+	ROL(InstructionType.ROL, Decoders::decodeRegN, Executors::executeRol, Printers::rol),
 
-	WRITE(InstructionType.WRITE, Decoders::decodeFReg, Executors::executeWrite),
-	B(InstructionType.B, Decoders::decodeFReg, Executors::executeB),
-	BZ(InstructionType.BZ, Decoders::decodeFReg, Executors::executeBz),
-	BS(InstructionType.BS, Decoders::decodeFReg, Executors::executeBs),
-	BNZ(InstructionType.BNZ, Decoders::decodeFReg, Executors::executeBnz),
+	WRITE(InstructionType.WRITE, Decoders::decodeFReg, Executors::executeWrite, Printers::write),
+	B(InstructionType.B, Decoders::decodeFReg, Executors::executeB, Printers::b),
+	BZ(InstructionType.BZ, Decoders::decodeFReg, Executors::executeBz, Printers::bz),
+	BS(InstructionType.BS, Decoders::decodeFReg, Executors::executeBs, Printers::bs),
+	BNZ(InstructionType.BNZ, Decoders::decodeFReg, Executors::executeBnz, Printers::bnz),
 
-	CMPI(InstructionType.CMPI, Decoders::decodeFRegN, Executors::executeCmpi),
-	ADDI(InstructionType.ADDI, Decoders::decodeFRegN, Executors::executeAddi);
+	CMPI(InstructionType.CMPI, Decoders::decodeFRegN, Executors::executeCmpi, Printers::cmpi),
+	ADDI(InstructionType.ADDI, Decoders::decodeFRegN, Executors::executeAddi, Printers::addi);
 
 	private static final Map<Integer, Map<Byte, Instruction>> map = new HashMap<>();
 
@@ -101,11 +106,14 @@ public enum Instruction {
 	private final InstructionType instructionType;
 	private final Decoder decoder;
 	private final Executor executor;
+	private final Printer printer;
 
-	Instruction(InstructionType instructionType, Decoder decoder, Executor executor) {
+	Instruction(InstructionType instructionType, Decoder decoder, Executor executor,
+			Printer printer) {
 		this.instructionType = instructionType;
 		this.decoder = decoder;
 		this.executor = executor;
+		this.printer = printer;
 	}
 
 	public static Optional<Instruction> getInstructionFromFetchQueue(FetchQueue fetchQueue) {
@@ -132,5 +140,9 @@ public enum Instruction {
 
 	public void execute(StadiumShip ship, InstructionParameters parameter, long currentCycle) {
 		executor.accept(ship, parameter, currentCycle);
+	}
+
+	public String print(InstructionParameters p) {
+		return printer.apply(p);
 	}
 }

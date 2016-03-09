@@ -3,13 +3,18 @@ package corewar.stadium.runtime;
 import corewar.shared.Constants;
 import corewar.shared.InstructionType;
 import corewar.shared.Mode;
+import corewar.stadium.Stadium;
 import corewar.stadium.StadiumShip;
 import corewar.stadium.memory.InstructionParameters;
 import corewar.stadium.memory.Register;
+import corewar.stadium.runtime.logs.ExecuteLog;
+import corewar.stadium.runtime.logs.ReadWriteLog;
 
 import java.util.BitSet;
 import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
+
+import static corewar.shared.HexIntConverter.intToHexWithPrefix;
 
 public final class Executors {
 
@@ -29,6 +34,10 @@ public final class Executors {
 
 	public static void executeCrash(StadiumShip ship, InstructionParameters parameter,
 			long currentCycle) {
+		Stadium stadium = ship.getStadium();
+		ExecuteLog log = ExecuteLog.create(ship.getId(), stadium.getCycle(), ship.onBlueArrow(),
+				ship.onRails(), "crashed");
+		stadium.getLogger().log(log);
 		ship.crash();
 	}
 
@@ -49,6 +58,10 @@ public final class Executors {
 			if (checkedZones.cardinality() == Constants.CHECKPOINTS_COUNT) {
 				ship.setFinished();
 			}
+			Stadium stadium = ship.getStadium();
+			ExecuteLog log = ExecuteLog.create(ship.getId(), stadium.getCycle(), ship.onBlueArrow(),
+					ship.onRails(), "checked zone " + zone);
+			stadium.getLogger().log(log);
 		}
 	}
 
@@ -107,7 +120,12 @@ public final class Executors {
 		int offsetSrc = (parameter.getN() + offset) % Constants.BUFFER_SIZE;
 
 		byte q = ship.getBuffer().get(offsetSrc);
-		ship.getStadium().getTrack().write(addressDst, q);
+		Stadium stadium = ship.getStadium();
+		stadium.getTrack().write(addressDst, q);
+
+		ReadWriteLog log = ReadWriteLog.createWrite(ship.getId(), currentCycle, addressDst,
+				ship.onBlueArrow(), ship.onRails());
+		stadium.getLogger().log(log);
 	}
 
 	public static void executeLdr(StadiumShip ship, InstructionParameters parameter,
@@ -131,7 +149,12 @@ public final class Executors {
 		long addressDst = offsetAddressInTrack(ship.getPc(), offsetDst);
 
 		byte q = ship.getRegisters()[parameter.getRegY()].get(offset);
-		ship.getStadium().getTrack().write(addressDst, q);
+		Stadium stadium = ship.getStadium();
+		stadium.getTrack().write(addressDst, q);
+
+		ReadWriteLog log = ReadWriteLog.createWrite(ship.getId(), currentCycle, addressDst,
+				ship.onBlueArrow(), ship.onRails());
+		stadium.getLogger().log(log);
 	}
 
 	public static void executeStat(StadiumShip ship, InstructionParameters parameter,
@@ -206,7 +229,11 @@ public final class Executors {
 
 	public static void executeWrite(StadiumShip ship, InstructionParameters parameter,
 			long currentCycle) {
-		// TODO
+		String value = intToHexWithPrefix(ship.getRegisters()[parameter.getRegX()].asInt(), 4);
+		Stadium stadium = ship.getStadium();
+		ExecuteLog log = ExecuteLog.create(ship.getId(), stadium.getCycle(), ship.onBlueArrow(),
+				ship.onRails(), value);
+		stadium.getLogger().log(log);
 	}
 
 	public static void executeB(StadiumShip ship, InstructionParameters parameter,

@@ -16,10 +16,16 @@ public final class StadiumMain {
 		if (args.length < 1) {
 			Logger.logError("Stadium program argument error");
 		} else {
-			String file = args[0];
+			boolean verbose = false;
+			if(args.length > 1) {
+				if ("-v".equals(args[0])) {
+					verbose = true;
+				}
+			}
+			String file = args[args.length - 1];
 			try {
 				String content = new String(Files.readAllBytes(Paths.get(file)));
-				Logger.logResult(Stadiums.run(content));
+				Stadiums.run(content, verbose);
 			} catch (IOException e) {
 				Logger.logError("Cannot read file + '" + file + "'");
 			}
