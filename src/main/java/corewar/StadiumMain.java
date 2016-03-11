@@ -1,11 +1,14 @@
 package corewar;
 
 import corewar.shared.Logger;
+import corewar.shared.OptionParser;
+import corewar.shared.OptionParser.Options;
 import corewar.stadium.Stadiums;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public final class StadiumMain {
 
@@ -13,22 +16,17 @@ public final class StadiumMain {
 	}
 
 	public static void main(String[] args) {
-		if (args.length < 1) {
-			Logger.logError("Stadium program argument error");
-		} else {
-			boolean verbose = false;
-			if(args.length > 1) {
-				if ("-v".equals(args[0])) {
-					verbose = true;
-				}
-			}
-			String file = args[args.length - 1];
+		Optional<Options> options = OptionParser.parse(args);
+		if (options.isPresent()) {
+			Options opt = options.get();
 			try {
-				String content = new String(Files.readAllBytes(Paths.get(file)));
-				Stadiums.run(content, verbose);
+				String content = new String(Files.readAllBytes(Paths.get(opt.getFile())));
+				Stadiums.run(content, opt.getVerbosity());
 			} catch (IOException e) {
-				Logger.logError("Cannot read file + '" + file + "'");
+				Logger.logError("Cannot read file + '" + opt.getFile() + "'");
 			}
+		} else {
+			Logger.logError("Stadium program argument error");
 		}
 	}
 }

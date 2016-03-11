@@ -1009,7 +1009,7 @@ public class TestExecutor {
 			}
 
 			@Override
-			public void run(String shipBin, boolean verbose) {
+			public void run(String shipBin, int verbosity) {
 				throw new IllegalArgumentException("Should not be called");
 			}
 
