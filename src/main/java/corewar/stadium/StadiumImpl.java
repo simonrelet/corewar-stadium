@@ -24,8 +24,8 @@ final class StadiumImpl implements Stadium {
 	private int shipIdGenerator;
 
 	@Override
-	public void run(String shipBin, boolean verbose) {
-		logger.setVerbose(verbose);
+	public void run(String shipBin, int verbosity) {
+		logger.setVerbosity(verbosity);
 		ships.add(StadiumShip.create(this));
 		track.placeShip(Utilities.extractCodeFromBin(shipBin).toCharArray());
 

@@ -11,7 +11,7 @@ public final class Logger {
 
 	private final Deque<StadiumLog> logs = new LinkedList<>();
 
-	private boolean verbose;
+	private int verbosity;
 
 	private Logger() {
 	}
@@ -47,12 +47,12 @@ public final class Logger {
 	}
 
 	public void log(StadiumLog log) {
-		if (verbose) {
+		if (log.getType().getVerbosityLevel() <= verbosity) {
 			logs.add(log);
 		}
 	}
 
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
+	public void setVerbosity(int verbosity) {
+		this.verbosity = verbosity;
 	}
 }

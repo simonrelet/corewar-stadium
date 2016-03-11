@@ -9,7 +9,7 @@ public interface Stadium {
 
 	Track getTrack();
 
-	void run(String shipBin, boolean verbose);
+	void run(String shipBin, int verbosity);
 
 	Logger getLogger();
 

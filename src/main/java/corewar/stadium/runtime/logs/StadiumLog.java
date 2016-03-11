@@ -9,10 +9,20 @@ public class StadiumLog {
 	private final boolean rails;
 
 	public enum Type {
-		READ,
-		WRITE,
-		DECODE,
-		EXECUTE
+		READ(3),
+		WRITE(3),
+		DECODE(2),
+		EXECUTE(1);
+
+		private final int verbosityLevel;
+
+		private Type(int verbosityLevel) {
+			this.verbosityLevel = verbosityLevel;
+		}
+
+		public int getVerbosityLevel() {
+			return verbosityLevel;
+		}
 	}
 
 	protected StadiumLog(int shipId, Type type, long cycle, boolean blueArrow, boolean rails) {
@@ -21,6 +31,10 @@ public class StadiumLog {
 		this.cycle = cycle;
 		this.blueArrow = blueArrow;
 		this.rails = rails;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	protected StringBuilder getContent() {
