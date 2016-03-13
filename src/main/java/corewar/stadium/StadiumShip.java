@@ -2,6 +2,7 @@ package corewar.stadium;
 
 import corewar.shared.Constants;
 import corewar.shared.Delay;
+import corewar.shared.Logger;
 import corewar.shared.Mode;
 import corewar.stadium.memory.Buffer;
 import corewar.stadium.memory.FetchQueue;
@@ -179,11 +180,12 @@ public final class StadiumShip {
 
 	private void runFetch() {
 		computeOnRails();
+		byte q = stadium.getTrack().read(pc);
 
 		stadium.getLogger().log(ReadWriteLog.createRead(id, stadium.getCycle(), pc, onBlueArrow(),
-				onRails()));
+				onRails(), q));
 
-		fetchQueue.append(stadium.getTrack().read(pc));
+		fetchQueue.append(q);
 		incrementPcAndW0();
 
 		instruction = Instruction.getInstructionFromFetchQueue(fetchQueue);
@@ -199,8 +201,9 @@ public final class StadiumShip {
 			checkArgument(instruction.isPresent(), "There should be an instruction");
 			Instruction i = instruction.get();
 			InstructionParameters p = i.decode(fetchQueue);
-			stadium.getLogger().log(DecodeLog.create(id, stadium.getCycle(), onBlueArrow(),
-					onRails(), i.print(p)));
+			Logger logger = stadium.getLogger();
+			logger.log(DecodeLog.create(id, stadium.getCycle(), onBlueArrow(),
+					onRails(), i.print(this, p, logger.getVerbosity())));
 
 			instructionParameters = Optional.of(p);
 			state = State.EXECUTE;

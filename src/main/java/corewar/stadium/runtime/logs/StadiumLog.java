@@ -11,12 +11,12 @@ public class StadiumLog {
 	public enum Type {
 		READ(3),
 		WRITE(3),
-		DECODE(2),
+		DECODE(1),
 		EXECUTE(1);
 
 		private final int verbosityLevel;
 
-		private Type(int verbosityLevel) {
+		Type(int verbosityLevel) {
 			this.verbosityLevel = verbosityLevel;
 		}
 
@@ -37,24 +37,25 @@ public class StadiumLog {
 		return type;
 	}
 
-	protected StringBuilder getContent() {
+	protected StringBuilder getContent(int verbosity) {
 		StringBuilder stringBuilder = new StringBuilder("\"shipId\":")
 				.append(shipId)
 				.append(",\"type\":\"")
 				.append(type.name().toLowerCase())
 				.append("\",\"cycle\":")
 				.append(cycle);
-		if (rails) {
-			stringBuilder.append(",\"rails\":").append("true");
-		}
-		if (blueArrow) {
-			stringBuilder.append(",\"blueArrow\":").append("true");
+		if(verbosity >= 3) {
+			if (rails) {
+				stringBuilder.append(",\"rails\":").append("true");
+			}
+			if (blueArrow) {
+				stringBuilder.append(",\"blueArrow\":").append("true");
+			}
 		}
 		return stringBuilder;
 	}
 
-	@Override
-	public String toString() {
-		return "{" + getContent().toString() + "}";
+	public String toString(int verbosity) {
+		return "{" + getContent(verbosity).toString() + "}";
 	}
 }

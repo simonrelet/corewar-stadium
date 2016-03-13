@@ -2,6 +2,7 @@ package corewar.stadium.runtime;
 
 import corewar.shared.Constants;
 import corewar.shared.InstructionType;
+import corewar.shared.Logger;
 import corewar.shared.Mode;
 import corewar.stadium.Stadium;
 import corewar.stadium.StadiumShip;
@@ -21,7 +22,7 @@ public final class Executors {
 	@FunctionalInterface
 	public interface Executor {
 
-		void accept(StadiumShip ship, InstructionParameters parameter, long currentCycle);
+		void apply(StadiumShip ship, InstructionParameters parameter, long currentCycle);
 	}
 
 	private Executors() {
@@ -59,9 +60,22 @@ public final class Executors {
 				ship.setFinished();
 			}
 			Stadium stadium = ship.getStadium();
-			ExecuteLog log = ExecuteLog.create(ship.getId(), stadium.getCycle(), ship.onBlueArrow(),
-					ship.onRails(), "checked zone " + zone);
-			stadium.getLogger().log(log);
+			Logger logger = stadium.getLogger();
+			StringBuilder stringBuilder = new StringBuilder()
+					.append("checked zone ")
+					.append(zone);
+
+			if (logger.getVerbosity() >= 2) {
+				stringBuilder
+						.append(" [")
+						.append(zone * Constants.CHECK_ZONE_SIZE)
+						.append(", ")
+						.append((zone + 1) * Constants.CHECK_ZONE_SIZE - 1)
+						.append("]");
+			}
+
+			logger.log(ExecuteLog.create(ship.getId(), stadium.getCycle(), ship.onBlueArrow(),
+					ship.onRails(), stringBuilder.toString()));
 		}
 	}
 
@@ -124,7 +138,7 @@ public final class Executors {
 		stadium.getTrack().write(addressDst, q);
 
 		ReadWriteLog log = ReadWriteLog.createWrite(ship.getId(), currentCycle, addressDst,
-				ship.onBlueArrow(), ship.onRails());
+				ship.onBlueArrow(), ship.onRails(), q);
 		stadium.getLogger().log(log);
 	}
 
@@ -153,7 +167,7 @@ public final class Executors {
 		stadium.getTrack().write(addressDst, q);
 
 		ReadWriteLog log = ReadWriteLog.createWrite(ship.getId(), currentCycle, addressDst,
-				ship.onBlueArrow(), ship.onRails());
+				ship.onBlueArrow(), ship.onRails(), q);
 		stadium.getLogger().log(log);
 	}
 

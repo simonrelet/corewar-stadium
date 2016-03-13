@@ -1027,7 +1027,7 @@ public class TestExecutor {
 
 	@Theory
 	public void testExecute(TP p) {
-		p.executor.accept(p.ship, p.param, p.cycle);
+		p.executor.apply(p.ship, p.param, p.cycle);
 		Assert.assertEquals(p.expected, p.ship);
 	}
 
