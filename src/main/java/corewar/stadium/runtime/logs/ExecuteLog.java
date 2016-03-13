@@ -16,8 +16,8 @@ public final class ExecuteLog extends StadiumLog {
 	}
 
 	@Override
-	protected StringBuilder getContent() {
-		return super.getContent()
+	protected StringBuilder getContent(int verbosity) {
+		return super.getContent(verbosity)
 				.append(",\"message\":\"")
 				.append(msg)
 				.append("\"");

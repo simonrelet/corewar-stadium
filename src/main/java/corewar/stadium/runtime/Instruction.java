@@ -139,10 +139,10 @@ public enum Instruction {
 	}
 
 	public void execute(StadiumShip ship, InstructionParameters parameter, long currentCycle) {
-		executor.accept(ship, parameter, currentCycle);
+		executor.apply(ship, parameter, currentCycle);
 	}
 
-	public String print(InstructionParameters p) {
-		return printer.apply(p);
+	public String print(StadiumShip ship, InstructionParameters p, int verbosity) {
+		return printer.apply(ship, p, verbosity);
 	}
 }

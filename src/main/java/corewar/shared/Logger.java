@@ -33,10 +33,10 @@ public final class Logger {
 		if (!logs.isEmpty()) {
 			stringBuilder.append(",\"logs\":[");
 
-			stringBuilder.append(logs.poll().toString());
+			stringBuilder.append(logs.poll().toString(verbosity));
 			while (!logs.isEmpty()) {
 				stringBuilder.append(",")
-						.append(logs.poll().toString());
+						.append(logs.poll().toString(verbosity));
 			}
 
 			stringBuilder.append("]");
@@ -54,5 +54,9 @@ public final class Logger {
 
 	public void setVerbosity(int verbosity) {
 		this.verbosity = verbosity;
+	}
+
+	public int getVerbosity() {
+		return verbosity;
 	}
 }
