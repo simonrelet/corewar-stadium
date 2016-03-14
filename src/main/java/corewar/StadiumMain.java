@@ -21,7 +21,7 @@ public final class StadiumMain {
 			Options opt = options.get();
 			try {
 				String content = new String(Files.readAllBytes(Paths.get(opt.getFile())));
-				Stadiums.run(content, opt.getVerbosity());
+				Stadiums.run(content, opt);
 			} catch (IOException e) {
 				Logger.logError("Cannot read file + '" + opt.getFile() + "'");
 			}
