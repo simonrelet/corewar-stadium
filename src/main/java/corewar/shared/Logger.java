@@ -12,6 +12,8 @@ public final class Logger {
 	private final Deque<StadiumLog> logs = new LinkedList<>();
 
 	private int verbosity;
+	private long firstCycle;
+	private long lastCycle;
 
 	private Logger() {
 	}
@@ -47,7 +49,8 @@ public final class Logger {
 	}
 
 	public void log(StadiumLog log) {
-		if (log.getType().getVerbosityLevel() <= verbosity) {
+		if (log.getType().getVerbosityLevel() <= verbosity
+				&& log.getCycle() >= firstCycle && log.getCycle() <= lastCycle) {
 			logs.add(log);
 		}
 	}
@@ -58,5 +61,13 @@ public final class Logger {
 
 	public int getVerbosity() {
 		return verbosity;
+	}
+
+	public void setFirstCycle(long firstCycle) {
+		this.firstCycle = firstCycle;
+	}
+
+	public void setLastCycle(long lastCycle) {
+		this.lastCycle = lastCycle;
 	}
 }

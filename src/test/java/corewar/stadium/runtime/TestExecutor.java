@@ -4,6 +4,7 @@ import corewar.shared.Constants;
 import corewar.shared.InstructionType;
 import corewar.shared.Logger;
 import corewar.shared.Mode;
+import corewar.shared.OptionParser;
 import corewar.stadium.Stadium;
 import corewar.stadium.StadiumShip;
 import corewar.stadium.StadiumShipBuilder;
@@ -1009,7 +1010,7 @@ public class TestExecutor {
 			}
 
 			@Override
-			public void run(String shipBin, int verbosity) {
+			public void run(String shipBin, OptionParser.Options verbosity) {
 				throw new IllegalArgumentException("Should not be called");
 			}
 

@@ -37,6 +37,10 @@ public class StadiumLog {
 		return type;
 	}
 
+	public long getCycle() {
+		return cycle;
+	}
+
 	protected StringBuilder getContent(int verbosity) {
 		StringBuilder stringBuilder = new StringBuilder("\"shipId\":")
 				.append(shipId)

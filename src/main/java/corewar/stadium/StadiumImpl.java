@@ -2,6 +2,7 @@ package corewar.stadium;
 
 import corewar.shared.Constants;
 import corewar.shared.Logger;
+import corewar.shared.OptionParser.Options;
 import corewar.shared.Utilities;
 import corewar.stadium.StadiumResult.FinishType;
 import corewar.stadium.memory.Track;
@@ -24,8 +25,10 @@ final class StadiumImpl implements Stadium {
 	private int shipIdGenerator;
 
 	@Override
-	public void run(String shipBin, int verbosity) {
-		logger.setVerbosity(verbosity);
+	public void run(String shipBin, Options options) {
+		logger.setVerbosity(options.getVerbosity());
+		logger.setFirstCycle(options.getFirstCycle());
+		logger.setLastCycle(options.getLastCycle());
 		ships.add(StadiumShip.create(this));
 		track.placeShip(Utilities.extractCodeFromBin(shipBin).toCharArray());
 
