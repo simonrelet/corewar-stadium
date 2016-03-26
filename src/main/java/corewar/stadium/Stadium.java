@@ -1,7 +1,6 @@
 package corewar.stadium;
 
 import corewar.shared.Logger;
-import corewar.shared.OptionParser.Options;
 import corewar.stadium.memory.Track;
 
 public interface Stadium {
@@ -10,7 +9,7 @@ public interface Stadium {
 
 	Track getTrack();
 
-	void run(String shipBin, Options verbosity);
+	void run(String shipBin);
 
 	Logger getLogger();
 

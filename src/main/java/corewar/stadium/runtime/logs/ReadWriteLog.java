@@ -25,8 +25,8 @@ public final class ReadWriteLog extends StadiumLog {
 	}
 
 	@Override
-	protected StringBuilder getContent(int verbosity) {
-		StringBuilder stringBuilder = super.getContent(verbosity)
+	protected StringBuilder getJsonContent(int verbosity) {
+		StringBuilder stringBuilder = super.getJsonContent(verbosity)
 				.append(",\"address\":")
 				.append(address);
 		if (verbosity >= 4) {
@@ -34,6 +34,18 @@ public final class ReadWriteLog extends StadiumLog {
 					.append(",\"nibble\":\"")
 					.append(HexIntConverter.intToHexWithPrefix(q, 1))
 					.append("\"");
+		}
+		return stringBuilder;
+	}
+
+	@Override
+	protected StringBuilder getPrettyContent(int verbosity) {
+		StringBuilder stringBuilder = super.getPrettyContent(verbosity)
+				.append("\n    Address: ")
+				.append(address);
+		if (verbosity >= 4) {
+			stringBuilder.append("\n    Nibble: ")
+					.append(HexIntConverter.intToHexWithPrefix(q, 1));
 		}
 		return stringBuilder;
 	}

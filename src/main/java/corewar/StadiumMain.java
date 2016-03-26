@@ -23,10 +23,10 @@ public final class StadiumMain {
 				String content = new String(Files.readAllBytes(Paths.get(opt.getFile())));
 				Stadiums.run(content, opt);
 			} catch (IOException e) {
-				Logger.logError("Cannot read file + '" + opt.getFile() + "'");
+				Logger.logError("Cannot read file + '" + opt.getFile() + "'", opt);
 			}
 		} else {
-			Logger.logError("Stadium program argument error");
+			Logger.logError("Stadium program argument error", Options.createDefault());
 		}
 	}
 }

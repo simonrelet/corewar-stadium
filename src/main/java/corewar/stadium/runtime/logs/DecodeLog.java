@@ -16,10 +16,18 @@ public final class DecodeLog extends StadiumLog {
 	}
 
 	@Override
-	protected StringBuilder getContent(int verbosity) {
-		return super.getContent(verbosity)
+	protected StringBuilder getJsonContent(int verbosity) {
+		return super.getJsonContent(verbosity)
 				.append(",\"instruction\":\"")
 				.append(instruction)
 				.append("\"");
+	}
+
+	@Override
+	protected StringBuilder getPrettyContent(int verbosity) {
+		return super.getPrettyContent(verbosity)
+				.append("\n    Instruction: '")
+				.append(instruction)
+				.append("'");
 	}
 }

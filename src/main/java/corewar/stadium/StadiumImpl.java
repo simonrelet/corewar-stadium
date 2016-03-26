@@ -18,17 +18,18 @@ final class StadiumImpl implements Stadium {
 
 	private final Track track = Track.create();
 	private final Collection<StadiumShip> ships = new ArrayList<>();
-	private final Logger logger = Logger.create();
+	private final Logger logger;
 
 	private Optional<StadiumResult> lastFinishedShip = Optional.empty();
 	private long cycle;
 	private int shipIdGenerator;
 
+	public StadiumImpl(Options options) {
+		this.logger = Logger.create(options);
+	}
+
 	@Override
-	public void run(String shipBin, Options options) {
-		logger.setVerbosity(options.getVerbosity());
-		logger.setFirstCycle(options.getFirstCycle());
-		logger.setLastCycle(options.getLastCycle());
+	public void run(String shipBin) {
 		ships.add(StadiumShip.create(this));
 		track.placeShip(Utilities.extractCodeFromBin(shipBin).toCharArray());
 

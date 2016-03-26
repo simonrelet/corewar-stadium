@@ -8,6 +8,6 @@ public final class Stadiums {
 	}
 
 	public static void run(String inputShipBin, Options options) {
-		new StadiumImpl().run(inputShipBin, options);
+		new StadiumImpl(options).run(inputShipBin);
 	}
 }
