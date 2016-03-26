@@ -4,7 +4,7 @@ import corewar.shared.Constants;
 import corewar.shared.InstructionType;
 import corewar.shared.Logger;
 import corewar.shared.Mode;
-import corewar.shared.OptionParser;
+import corewar.shared.OptionParser.Options;
 import corewar.stadium.Stadium;
 import corewar.stadium.StadiumShip;
 import corewar.stadium.StadiumShipBuilder;
@@ -996,7 +996,7 @@ public class TestExecutor {
 
 	private static Stadium stadium() {
 		Track track = Track.create();
-		Logger logger = Logger.create();
+		Logger logger = Logger.create(Options.createDefault());
 		return new Stadium() {
 
 			@Override
@@ -1010,7 +1010,7 @@ public class TestExecutor {
 			}
 
 			@Override
-			public void run(String shipBin, OptionParser.Options verbosity) {
+			public void run(String shipBin) {
 				throw new IllegalArgumentException("Should not be called");
 			}
 

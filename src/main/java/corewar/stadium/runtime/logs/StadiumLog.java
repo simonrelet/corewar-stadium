@@ -1,5 +1,7 @@
 package corewar.stadium.runtime.logs;
 
+import corewar.shared.OptionParser.Options;
+
 public class StadiumLog {
 
 	private final int shipId;
@@ -41,14 +43,14 @@ public class StadiumLog {
 		return cycle;
 	}
 
-	protected StringBuilder getContent(int verbosity) {
+	protected StringBuilder getJsonContent(int verbosity) {
 		StringBuilder stringBuilder = new StringBuilder("\"shipId\":")
 				.append(shipId)
 				.append(",\"type\":\"")
 				.append(type.name().toLowerCase())
 				.append("\",\"cycle\":")
 				.append(cycle);
-		if(verbosity >= 3) {
+		if (verbosity >= 3) {
 			if (rails) {
 				stringBuilder.append(",\"rails\":").append("true");
 			}
@@ -59,7 +61,35 @@ public class StadiumLog {
 		return stringBuilder;
 	}
 
-	public String toString(int verbosity) {
-		return "{" + getContent(verbosity).toString() + "}";
+	protected StringBuilder getPrettyContent(int verbosity) {
+		StringBuilder stringBuilder = new StringBuilder("Cycle ")
+				.append(cycle)
+				.append(" for ship ")
+				.append(shipId)
+				.append(": ")
+				.append(type.name().toLowerCase());
+		if (verbosity >= 3) {
+			if (rails || blueArrow) {
+				stringBuilder.append("\n    Boost(s): ");
+			}
+			if (rails) {
+				stringBuilder.append("rails");
+			}
+			if (blueArrow) {
+				if (rails) {
+					stringBuilder.append(", ");
+				}
+				stringBuilder.append("blue arrow");
+			}
+		}
+
+		return stringBuilder;
+	}
+
+	public String toString(Options options) {
+		if (options.isPretty()) {
+			return getPrettyContent(options.getVerbosity()).toString();
+		}
+		return "{" + getJsonContent(options.getVerbosity()) + "}";
 	}
 }
