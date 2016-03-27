@@ -87,7 +87,7 @@ public abstract class Logger {
 
 		@Override
 		protected void handleResult(StringBuilder stringBuilder, StadiumResult result) {
-			stringBuilder.append("\"result\":")
+			stringBuilder.append("\"result\":\"")
 					.append(result.getFinishType() == FinishType.FINISHED ? "finished" : "crashed")
 					.append("\",\"cycles\":")
 					.append(result.getCycle());
